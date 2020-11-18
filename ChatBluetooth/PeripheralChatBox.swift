@@ -16,6 +16,7 @@ class PeripheralViewController: UIViewController {
     @IBOutlet var textView: UITextView!
     @IBOutlet var advertisingSwitch: UISwitch!
     @IBOutlet var textField: UITextField!
+    @IBOutlet var textField2: UITextField!
     @IBOutlet var sendButton: UIButton!
 
     var peripheralManager: CBPeripheralManager!
@@ -24,6 +25,9 @@ class PeripheralViewController: UIViewController {
     var dataToSend = Data()
     var sendDataIndex: Int = 0
     var defaultstore: Firestore!
+    var timer: Timer!
+    var date = Date()
+    var formatter = DateFormatter()
     
     // MARK: - View Lifecycle
     
@@ -31,9 +35,12 @@ class PeripheralViewController: UIViewController {
         peripheralManager = CBPeripheralManager(delegate: self, queue: nil, options: [CBPeripheralManagerOptionShowPowerAlertKey: true])
         super.viewDidLoad()
         textField.delegate = self
+        textField2.delegate = self
+        formatter.setLocalizedDateFormatFromTemplate("H")
+        let Chat = formatter.string(from: date)
         defaultstore = Firestore.firestore()
         //Firestoreからデータを取得し、TextViewに表示する
-         defaultstore.collection("chat").addSnapshotListener { (snapShot, error) in
+         defaultstore.collection(Chat).addSnapshotListener { (snapShot, error) in
              guard let value = snapShot else {
                  print("snapShot is nil")
                  return
@@ -82,19 +89,21 @@ class PeripheralViewController: UIViewController {
 
         //キーボードを閉じる
         textField.resignFirstResponder()
-        //入力された値を配列に入れる
-        let message: String!
-        message = textField.text
-        let messageData: [String: String] = ["name":"Peripheral", "message":message]
-
+        textField2.resignFirstResponder()
+        guard let name =  textField2.text else {return}
+        guard let message = textField.text else {return}
+        let date = Date()
+        let df = DateFormatter()
+        df.dateFormat = "yyyy/MM/dd HH:mm:ss"
+        let messageData: [String: String] = ["name":name, "message":message, "created at": df.string(from: date)]
+        formatter.setLocalizedDateFormatFromTemplate("H")
+        let Chat = formatter.string(from: date)
         //Firestoreに送信する
-        defaultstore.collection("chat").addDocument(data: messageData)
-
+        defaultstore.collection(Chat).addDocument(data: messageData)
         //メッセージの中身を空にする
         textField.text = ""
 
     }
-
     // MARK: - Helper Methods
 
     /*
@@ -325,8 +334,12 @@ extension PeripheralViewController:UITextFieldDelegate {
 
             //キーボードを閉じる
             textField.resignFirstResponder()
+            textField2.resignFirstResponder()
             //messageに入力されたテキストを変数に入れる。nilの場合はFirestoreへ行く処理をしない
             guard let message = textField.text else {
+                return true
+            }
+            guard let name = textField2.text else {
                 return true
             }
 
@@ -334,12 +347,20 @@ extension PeripheralViewController:UITextFieldDelegate {
             if textField.text == "" {
                 return true
             }
+            if textField2.text == "" {
+                return true
+            }
+            let date = Date()
+            let df = DateFormatter()
+            df.dateFormat = "yyyy/MM/dd HH:mm:ss"
+            formatter.setLocalizedDateFormatFromTemplate("H")
+            let Chat = formatter.string(from: date)
 
             //入力された値を配列に入れる
-            let messageData: [String: String] = ["name":"Peripheral", "message":message]
+            let messageData: [String: String] = ["name":name, "message":message, "created at": df.string(from: date)]
 
             //Firestoreに送信する
-            defaultstore.collection("chat").addDocument(data: messageData)
+            defaultstore.collection(Chat).addDocument(data: messageData)
 
             //メッセージの中身を空にする
             textField.text = ""

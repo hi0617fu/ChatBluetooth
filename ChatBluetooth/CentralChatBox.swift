@@ -14,10 +14,14 @@ class CentralChatBox: UIViewController {
      // UIViewController overrides, properties specific to this class, private helper methods, etc.
 
      @IBOutlet var textView: UITextView!
+     @IBOutlet var textField2: UITextField!
      @IBOutlet var textField: UITextField!
      @IBOutlet var sendButton: UIButton!
+    
 
      var defaultstore: Firestore!
+     var date = Date()
+     var formatter = DateFormatter()
      
      override func viewDidLoad() {
          super.viewDidLoad()
@@ -25,9 +29,13 @@ class CentralChatBox: UIViewController {
          textView.isEditable = false
          textView.isSelectable = false
          textField.delegate = self
+         textField2.delegate = self
+         
+         formatter.setLocalizedDateFormatFromTemplate("H")
+         let Chat = formatter.string(from: date)
          defaultstore = Firestore.firestore()
         //Firestoreからデータを取得し、TextViewに表示する
-         defaultstore.collection("chat").addSnapshotListener { (snapShot, error) in
+        defaultstore.collection(Chat).addSnapshotListener { (snapShot, error) in
              guard let value = snapShot else {
                  print("snapShot is nil")
                  return
@@ -66,13 +74,20 @@ class CentralChatBox: UIViewController {
 
         //キーボードを閉じる
         textField.resignFirstResponder()
+        textField2.resignFirstResponder()
         //入力された値を配列に入れる
         let message: String!
+        let name: String!
+        let date = Date()
+        let df = DateFormatter()
+        df.dateFormat = "yyyy/MM/dd HH:mm:ss"
+        name = textField2.text
         message = textField.text
-        let messageData: [String: String] = ["name":"Central", "message":message]
-
+        let messageData: [String: String] = ["name":name, "message":message, "created at":  df.string(from: date)]
+        formatter.setLocalizedDateFormatFromTemplate("H")
+        let Chat = formatter.string(from: date)
         //Firestoreに送信する
-        defaultstore.collection("chat").addDocument(data: messageData)
+        defaultstore.collection(Chat).addDocument(data: messageData)
 
         //メッセージの中身を空にする
         textField.text = ""
@@ -84,8 +99,12 @@ extension CentralChatBox:UITextFieldDelegate {
 
             //キーボードを閉じる
             textField.resignFirstResponder()
+            textField2.resignFirstResponder()
             //messageに入力されたテキストを変数に入れる。nilの場合はFirestoreへ行く処理をしない
             guard let message = textField.text else {
+                return true
+            }
+            guard let name = textField2.text else {
                 return true
             }
 
@@ -93,13 +112,21 @@ extension CentralChatBox:UITextFieldDelegate {
             if textField.text == "" {
                 return true
             }
+            if textField2.text == "" {
+                return true
+            }
 
-            //入力された値を配列に入れる
-            let messageData: [String: String] = ["name":"Central", "message":message]
+        let date = Date()
+        let df = DateFormatter()
+        df.dateFormat = "yyyy/MM/dd HH:mm:ss"
+        formatter.setLocalizedDateFormatFromTemplate("H")
+        let Chat = formatter.string(from: date)
 
-            //Firestoreに送信する
-            defaultstore.collection("chat").addDocument(data: messageData)
+        //入力された値を配列に入れる
+        let messageData: [String: String] = ["name":name, "message":message, "created at": df.string(from: date)]
 
+        //Firestoreに送信する
+        defaultstore.collection(Chat).addDocument(data: messageData)
             //メッセージの中身を空にする
             textField.text = ""
 

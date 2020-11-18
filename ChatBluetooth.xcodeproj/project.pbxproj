@@ -15,6 +15,8 @@
 		9240492F25553B450034DD1A /* PeripheralChatBox.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9240492E25553B440034DD1A /* PeripheralChatBox.swift */; };
 		9240493225553B530034DD1A /* CentralChatBox.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9240493125553B530034DD1A /* CentralChatBox.swift */; };
 		9240493525553B690034DD1A /* TransferService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9240493425553B690034DD1A /* TransferService.swift */; };
+		924A9C13255A521F00C8AC85 /* CentralSigninViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 924A9C12255A521F00C8AC85 /* CentralSigninViewController.swift */; };
+		924A9C19255A524200C8AC85 /* PeripheralSigninViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 924A9C18255A524200C8AC85 /* PeripheralSigninViewController.swift */; };
 		92D333932557DDF30045DE28 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 92D333922557DDF30045DE28 /* GoogleService-Info.plist */; };
 		92D33397255942D90045DE28 /* CentralViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92D33396255942D90045DE28 /* CentralViewController.swift */; };
 		92D3339B255942FF0045DE28 /* PeripheralTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92D3339A255942FF0045DE28 /* PeripheralTableViewController.swift */; };
@@ -35,6 +37,8 @@
 		9240492E25553B440034DD1A /* PeripheralChatBox.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PeripheralChatBox.swift; sourceTree = "<group>"; };
 		9240493125553B530034DD1A /* CentralChatBox.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CentralChatBox.swift; sourceTree = "<group>"; };
 		9240493425553B690034DD1A /* TransferService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransferService.swift; sourceTree = "<group>"; };
+		924A9C12255A521F00C8AC85 /* CentralSigninViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CentralSigninViewController.swift; sourceTree = "<group>"; };
+		924A9C18255A524200C8AC85 /* PeripheralSigninViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PeripheralSigninViewController.swift; sourceTree = "<group>"; };
 		92D333922557DDF30045DE28 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "GoogleService-Info.plist"; path = "../../../Downloads/GoogleService-Info.plist"; sourceTree = "<group>"; };
 		92D33396255942D90045DE28 /* CentralViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CentralViewController.swift; sourceTree = "<group>"; };
 		92D3339A255942FF0045DE28 /* PeripheralTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PeripheralTableViewController.swift; sourceTree = "<group>"; };
@@ -97,7 +101,9 @@
 				92D3339A255942FF0045DE28 /* PeripheralTableViewController.swift */,
 				92D33396255942D90045DE28 /* CentralViewController.swift */,
 				9240493125553B530034DD1A /* CentralChatBox.swift */,
+				924A9C12255A521F00C8AC85 /* CentralSigninViewController.swift */,
 				924048E8255533340034DD1A /* Main.storyboard */,
+				924A9C18255A524200C8AC85 /* PeripheralSigninViewController.swift */,
 				924048EB255533380034DD1A /* Assets.xcassets */,
 				924048ED255533380034DD1A /* LaunchScreen.storyboard */,
 				924048F0255533380034DD1A /* Info.plist */,
@@ -118,6 +124,7 @@
 				924048DC255533340034DD1A /* Frameworks */,
 				924048DD255533340034DD1A /* Resources */,
 				6941CA9044E2A9087F530E89 /* [CP] Embed Pods Frameworks */,
+				75D91AB97700AC6C1018CB64 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -192,6 +199,23 @@
 			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-ChatBluetooth/Pods-ChatBluetooth-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
+		75D91AB97700AC6C1018CB64 /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-ChatBluetooth/Pods-ChatBluetooth-resources-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Copy Pods Resources";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-ChatBluetooth/Pods-ChatBluetooth-resources-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-ChatBluetooth/Pods-ChatBluetooth-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
 		9F44291CFCA70797998273FE /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -225,6 +249,8 @@
 				9240493225553B530034DD1A /* CentralChatBox.swift in Sources */,
 				9240492F25553B450034DD1A /* PeripheralChatBox.swift in Sources */,
 				9240493525553B690034DD1A /* TransferService.swift in Sources */,
+				924A9C19255A524200C8AC85 /* PeripheralSigninViewController.swift in Sources */,
+				924A9C13255A521F00C8AC85 /* CentralSigninViewController.swift in Sources */,
 				92D3339B255942FF0045DE28 /* PeripheralTableViewController.swift in Sources */,
 				92D33397255942D90045DE28 /* CentralViewController.swift in Sources */,
 				924048E5255533340034DD1A /* SceneDelegate.swift in Sources */,
