@@ -18,8 +18,8 @@ class CentralSigninViewController: UIViewController, FUIAuthDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         self.authUI.delegate = self
-                self.authUI.providers = providers
-                authButton.addTarget(self,action: #selector(self.authButtonTapped(sender:)),for: .touchUpInside)
+        self.authUI.providers = providers
+        authButton.addTarget(self,action: #selector(self.authButtonTapped(sender:)),for: .touchUpInside)
 
     }
     @objc func authButtonTapped(sender : AnyObject) {

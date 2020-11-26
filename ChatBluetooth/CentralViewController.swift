@@ -318,7 +318,9 @@ extension CentralViewController: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         discoveredPeripheral = peripherals[indexPath.row]
-        retrievePeripheral()
+        tableView.deselectRow(at: indexPath, animated: true)
+        // 別の画面に遷移
+        performSegue(withIdentifier: "CentralChatBox", sender: nil)
     }
 }
 

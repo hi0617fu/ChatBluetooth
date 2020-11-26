@@ -45,7 +45,6 @@
                                         <color key="backgroundColor" red="1" green="0.74370067839999998" blue="0.11600798079999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                         <connections>
                                             <outlet property="peripheralLabel" destination="shx-ry-sUq" id="EUD-sZ-f9K"/>
-                                            <segue destination="IkY-AI-tl0" kind="show" id="xi4-1N-hTO"/>
                                         </connections>
                                     </tableViewCell>
                                 </prototypes>
@@ -74,6 +73,7 @@
                     <connections>
                         <outlet property="baseTableView" destination="Jlm-RF-SEh" id="9Z4-AH-9j4"/>
                         <outlet property="refreshButton" destination="NPK-WD-YYf" id="gaY-qo-BsZ"/>
+                        <segue destination="IkY-AI-tl0" kind="show" identifier="CentralChatBox" id="wPE-tY-Zl0"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="AOd-43-NnA" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
@@ -249,7 +249,6 @@
                                 </state>
                                 <connections>
                                     <action selector="clickSendAction:" destination="wuu-B5-pSd" eventType="touchUpInside" id="lhV-7O-5Fs"/>
-                                    <segue destination="FxQ-Wb-ByH" kind="show" id="cfU-6y-QEs"/>
                                 </connections>
                             </button>
                         </subviews>
@@ -264,6 +263,7 @@
                     <navigationItem key="navigationItem" title="認証" id="a9a-Od-KHf"/>
                     <connections>
                         <outlet property="authButton" destination="nOx-TO-OKX" id="H0k-d7-LXA"/>
+                        <segue destination="FxQ-Wb-ByH" kind="show" identifier="CentralViewController" id="UPo-xS-hcy"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="wuu-B5-pSd" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
@@ -286,7 +286,6 @@
                                 </state>
                                 <connections>
                                     <action selector="clickSendAction:" destination="pj2-Y3-0ug" eventType="touchUpInside" id="i7f-ef-tJh"/>
-                                    <segue destination="nQc-Wn-ETL" kind="show" identifier="PeripheralViewController" id="aGI-eJ-Wyt"/>
                                 </connections>
                             </button>
                         </subviews>
@@ -302,6 +301,7 @@
                     <navigationItem key="navigationItem" title="Log in" id="TPO-JX-6T2"/>
                     <connections>
                         <outlet property="authButton" destination="Ubt-dA-2Tb" id="HA7-Jw-UMG"/>
+                        <segue destination="nQc-Wn-ETL" kind="show" identifier="PeripheralViewController" id="8Uj-XS-728"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="pj2-Y3-0ug" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
@@ -329,6 +329,7 @@
                             </button>
                             <textField opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="249" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="ENd-MA-Cjx">
                                 <rect key="frame" x="12" y="131" width="231" height="34"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits"/>
                             </textField>
@@ -358,6 +359,7 @@
                             </textView>
                             <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="KNa-Pf-kmw">
                                 <rect key="frame" x="55" y="60" width="253" height="34"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits"/>
                             </textField>
