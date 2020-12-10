@@ -11,8 +11,6 @@ import Firebase
 import FirebaseFirestore
 
 class CentralChatBox: UIViewController {
-     // UIViewController overrides, properties specific to this class, private helper methods, etc.
-
      @IBOutlet var textView: UITextView!
      @IBOutlet var textField2: UITextField!
      @IBOutlet var textField: UITextField!
@@ -21,6 +19,7 @@ class CentralChatBox: UIViewController {
      var defaultstore: Firestore!
      var date = Date()
      var formatter = DateFormatter()
+    var udidData = ""
      
      override func viewDidLoad() {
          super.viewDidLoad()
@@ -34,9 +33,12 @@ class CentralChatBox: UIViewController {
          
          formatter.setLocalizedDateFormatFromTemplate("H")
          let Chat = formatter.string(from: date)
+        let udidString: String? = udidData
+        let device:String = udidString! + "," + Chat
+        print("Central Device: ",device)
         defaultstore = Firestore.firestore()
         //Firestoreからデータを取得し、TextViewに表示する
-        defaultstore.collection(Chat).order(by: "minute").addSnapshotListener { (snapShot, error) in
+        defaultstore.collection(device).order(by: "minute").addSnapshotListener { (snapShot, error) in
              guard let value = snapShot else {
                  print("snapShot is nil")
                  return
@@ -70,10 +72,10 @@ class CentralChatBox: UIViewController {
                     let nowDay = day.string(from: date)
                     let nowMonth = month.string(from: date)
                     if nowDay !=  oldDay {
-                        self.defaultstore.collection(Chat).document().delete()
+                        self.defaultstore.collection(device).document().delete()
                     } else {
                         if nowMonth != oldMonth {
-                            self.defaultstore.collection(Chat).document().delete()
+                            self.defaultstore.collection(device).document().delete()
                         } else {
                             //TextViewの一番下に新しいメッセージ内容を追加する
                             self.textView.text =  "\(self.textView.text!).\n\(name) : \(message)"
@@ -109,9 +111,11 @@ class CentralChatBox: UIViewController {
         let date = Date()
         formatter.setLocalizedDateFormatFromTemplate("H")
         let Chat1 = formatter.string(from: date)
+        let udidString: String? = udidData
+        let device:String = udidString! + "," + Chat1
         defaultstore = Firestore.firestore()
         //Firestoreからデータを取得し、TextViewに表示する
-        defaultstore.collection(Chat1).order(by: "minute").addSnapshotListener { [self] (snapShot, error) in
+        defaultstore.collection(device).order(by: "minute").addSnapshotListener { [self] (snapShot, error) in
              guard let value = snapShot else {
                  print("snapShot is nil")
                  return
@@ -146,10 +150,10 @@ class CentralChatBox: UIViewController {
                     let nowDay = day.string(from: date)
                     let nowMonth = month.string(from: date)
                     if nowDay !=  oldDay {
-                        self.defaultstore.collection(Chat1).document().delete()
+                        self.defaultstore.collection(device).document().delete()
                     } else {
                         if nowMonth != oldMonth {
-                            self.defaultstore.collection(Chat1).document().delete()
+                            self.defaultstore.collection(device).document().delete()
                         } else {
                             //TextViewの一番下に新しいメッセージ内容を追加する
                                 self.textView.text =  "\(self.textView.text!)\n\(name) : \(message)"
@@ -161,11 +165,19 @@ class CentralChatBox: UIViewController {
     }
     
      @IBAction func clickSendAction(_ sender: AnyObject) {
-        print("送信が押されたよ")
+        print("送信が押されました")
+        guard let textField = self.textField,
+              let textField2 = self.textField2 else {
+                  return
+        }
+        // 文字数が0の場合(""空文字)もtourokuButtonを非活性に
+        let text: String = textField.text  ?? ""
+        let text2: String  = textField2.text ?? ""
+        if text.count == 0 || text2.count == 0 {
+            return
+        }
 
-        //キーボードを閉じる
         textField.resignFirstResponder()
-        textField2.resignFirstResponder()
         guard let name =  textField2.text else {return}
         guard let message = textField.text else {return}
         let date = Date()
@@ -175,6 +187,8 @@ class CentralChatBox: UIViewController {
         let second = DateFormatter()
         formatter.setLocalizedDateFormatFromTemplate("H")
         let Chat = formatter.string(from: date)
+        let udidString: String? = udidData
+        let device:String = udidString! + "," + Chat
         month.dateFormat = "M"
         day.dateFormat = "d"
         minute.dateFormat = "m"
@@ -184,20 +198,27 @@ class CentralChatBox: UIViewController {
         let realTime = Int(stringMinute)!*100+Int(stringSecond)!
         let messageData: [String: String] = ["name":name, "message":message, "day": day.string(from: date), "month": month.string(from: date),"minute": String(format: "%04d", realTime), "hour": Chat]
         formatter.setLocalizedDateFormatFromTemplate("H")
-        //Firestoreに送信する
-        defaultstore.collection(Chat).addDocument(data: messageData)
-        //メッセージの中身を空にする
+        defaultstore.collection(device).addDocument(data: messageData)
         textField.text = ""
      }
  }
+
 extension CentralChatBox:UITextFieldDelegate {
      func textFieldShouldReturn(_ textField: UITextField) -> Bool {
-            print("returnが押されたよ")
+        print("returnが押されたよ")
+        guard let textField = self.textField,
+              let textField2 = self.textField2 else {
+                  return true
+        }
+        // 文字数が0の場合(""空文字)もtourokuButtonを非活性に
+        let text: String = textField.text  ?? ""
+        let text2: String  = textField2.text ?? ""
+        if text.count == 0 || text2.count == 0 {
+            return true
+            
+        }
 
-        //キーボードを閉じる
         textField.resignFirstResponder()
-        textField2.resignFirstResponder()
-        //messageに入力されたテキストを変数に入れる。nilの場合はFirestoreへ行く処理をしない
         guard let message = textField.text else {
             return true
         }
@@ -205,7 +226,6 @@ extension CentralChatBox:UITextFieldDelegate {
             return true
         }
 
-        //messageが空欄の場合はFirestoreへ行く処理をしない
         if textField.text == "" {
             return true
         }
@@ -219,6 +239,8 @@ extension CentralChatBox:UITextFieldDelegate {
         let second = DateFormatter()
         formatter.setLocalizedDateFormatFromTemplate("H")
         let Chat = formatter.string(from: date)
+        let udidString: String? = udidData
+        let device:String = udidString! + "," + Chat
         month.dateFormat = "M"
         day.dateFormat = "d"
         minute.dateFormat = "m"
@@ -228,12 +250,8 @@ extension CentralChatBox:UITextFieldDelegate {
         let realTime = Int(stringMinute)!*100+Int(stringSecond)!
         let messageData: [String: String] = ["name":name, "message":message, "day": day.string(from: date), "month": month.string(from: date),"minute": String(format: "%04d", realTime), "hour": Chat]
 
-        //Firestoreに送信する
-        defaultstore.collection(Chat).addDocument(data: messageData)
-
-        //メッセージの中身を空にする
+        defaultstore.collection(device).addDocument(data: messageData)
         textField.text = ""
-
         return true
     }
 }

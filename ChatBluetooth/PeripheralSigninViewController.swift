@@ -3,6 +3,7 @@ import Firebase
 import FirebaseUI
 import FirebaseAuth
 import GoogleSignIn
+//認証ボタンをPeripheralボタンにすることが可能かも
 
 class PeripheralSigninViewController: UIViewController, FUIAuthDelegate {
     

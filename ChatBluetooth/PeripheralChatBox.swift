@@ -12,6 +12,7 @@ import Firebase
 import FirebaseFirestore
 import Foundation
 
+
 class PeripheralViewController: UIViewController {
 
     @IBOutlet var textView: UITextView!
@@ -23,27 +24,31 @@ class PeripheralViewController: UIViewController {
     var peripheralManager: CBPeripheralManager!
     var transferCharacteristic: CBMutableCharacteristic?
     var connectedCentral: CBCentral?
-    var dataToSend = Data()
-    var sendDataIndex: Int = 0
+    var characteristic: CBCharacteristic!
+   // var dataToSend = Data()
+   // var sendDataIndex: Int = 0
     var defaultstore: Firestore!
     var date = Date()
     var formatter = DateFormatter()
-    
+    var udid:String! = UIDevice.current.identifierForVendor!.uuidString
     // MARK: - View Lifecycle
     
     override func viewDidLoad() {
         peripheralManager = CBPeripheralManager(delegate: self, queue: nil, options: [CBPeripheralManagerOptionShowPowerAlertKey: true])
         super.viewDidLoad()
         Timer.scheduledTimer(timeInterval: 30, target: self, selector: #selector(matchTime), userInfo: nil, repeats: true)
-
+        textView.isUserInteractionEnabled = true //キーボードを出したくない
+        textView.isEditable = false //キーボードを出したくない
         textView.text = ""
         textField.delegate = self
         textField2.delegate = self
         formatter.setLocalizedDateFormatFromTemplate("H")
         let Chat1 = formatter.string(from: date)
+        let device: String = udid + "," + Chat1
         defaultstore = Firestore.firestore()
         //Firestoreからデータを取得し、TextViewに表示する
-        defaultstore.collection(Chat1).order(by: "minute").addSnapshotListener { [self] (snapShot, error) in
+        print("Perihperal:", device)
+        defaultstore.collection(device).order(by: "minute").addSnapshotListener { [self] (snapShot, error) in
              guard let value = snapShot else {
                  print("snapShot is nil")
                  return
@@ -78,10 +83,10 @@ class PeripheralViewController: UIViewController {
                     let nowDay = day.string(from: date)
                     let nowMonth = month.string(from: date)
                     if nowDay !=  oldDay {
-                        self.defaultstore.collection(Chat1).document().delete()
+                        self.defaultstore.collection(device).document().delete()
                     } else {
                         if nowMonth != oldMonth {
-                            self.defaultstore.collection(Chat1).document().delete()
+                            self.defaultstore.collection(device).document().delete()
                         } else {
                             //TextViewの一番下に新しいメッセージ内容を追加する
                             self.textView.text =  "\(self.textView.text!)\n\(name) : \(message)"
@@ -94,13 +99,10 @@ class PeripheralViewController: UIViewController {
     }
     
     override func viewWillDisappear(_ animated: Bool) {
-        // Don't keep advertising going while we're not showing.
         peripheralManager.stopAdvertising()
-
         super.viewWillDisappear(animated)
     }
     
-    // MARK: - Switch Methods
     @objc func matchTime() {
         let time = Date()
         let modifiedDate = Calendar.current.date(byAdding: .second, value: -30, to: time)!
@@ -121,9 +123,9 @@ class PeripheralViewController: UIViewController {
         let date = Date()
         formatter.setLocalizedDateFormatFromTemplate("H")
         let Chat1 = formatter.string(from: date)
+        let device: String = udid + "," + Chat1
         defaultstore = Firestore.firestore()
-        //Firestoreからデータを取得し、TextViewに表示する
-        defaultstore.collection(Chat1).order(by: "minute").addSnapshotListener { [self] (snapShot, error) in
+        defaultstore.collection(device).order(by: "minute").addSnapshotListener { [self] (snapShot, error) in
              guard let value = snapShot else {
                  print("snapShot is nil")
                  return
@@ -158,10 +160,10 @@ class PeripheralViewController: UIViewController {
                     let nowDay = day.string(from: date)
                     let nowMonth = month.string(from: date)
                     if nowDay !=  oldDay {
-                        self.defaultstore.collection(Chat1).document().delete()
+                        self.defaultstore.collection(device).document().delete()
                     } else {
                         if nowMonth != oldMonth {
-                            self.defaultstore.collection(Chat1).document().delete()
+                            self.defaultstore.collection(device).document().delete()
                         } else {
                             //TextViewの一番下に新しいメッセージ内容を追加す
                                 self.textView.text =  "\(self.textView.text!)\n\(name) : \(message)"
@@ -180,12 +182,21 @@ class PeripheralViewController: UIViewController {
             peripheralManager.stopAdvertising()
         }
     }
+    
     @IBAction func clickSendAction(_ sender: AnyObject) {
-        print("送信が押されたよ")
-
+        print("送信が押されました")
+        guard let textField = self.textField,
+              let textField2 = self.textField2 else {
+                  return
+        }
+        // 文字数が0の場合(""空文字)もtourokuButtonを非活性に
+      let text: String = textField.text  ?? ""
+      let text2: String  = textField2.text ?? ""
+        if text.count == 0 || text2.count == 0 {
+            return
+        }
         //キーボードを閉じる
         textField.resignFirstResponder()
-        textField2.resignFirstResponder()
         guard let name =  textField2.text else {return}
         guard let message = textField.text else {return}
         let date = Date()
@@ -195,6 +206,7 @@ class PeripheralViewController: UIViewController {
         let second = DateFormatter()
         formatter.setLocalizedDateFormatFromTemplate("H")
         let Chat = formatter.string(from: date)
+        let device: String = udid + "," + Chat
         month.dateFormat = "M"
         day.dateFormat = "d"
         minute.dateFormat = "m"
@@ -205,17 +217,13 @@ class PeripheralViewController: UIViewController {
         let messageData: [String: String] = ["name":name, "message":message, "day": day.string(from: date), "month": month.string(from: date),"minute": String(format: "%04d", realTime), "hour": Chat]
 
         //Firestoreに送信する
-        defaultstore.collection(Chat).addDocument(data: messageData)
+        defaultstore.collection(device).addDocument(data: messageData)
         //メッセージの中身を空にする
-        textField.text = ""
+        textField2.text = ""
 
     }
-    // MARK: - Helper Methods
 
-    /*
-     *  Sends the next amount of data to the connected central
-     */
-    static var sendingEOM = false
+  /*  static var sendingEOM = false
     
     private func sendData() {
         
@@ -290,29 +298,36 @@ class PeripheralViewController: UIViewController {
             }
         }
     }
-
+*/
     private func setupPeripheral() {
         
-        // Build our service.
-        
-        // Start with the CBMutableCharacteristic.
-        let transferCharacteristic = CBMutableCharacteristic(type: TransferService.characteristic_Rx_UUID,
-                                                         properties: [.notify, .writeWithoutResponse],
+        let transferCharacteristic = CBMutableCharacteristic(type: TransferService.characteristic_UUID,
+                                                             properties: [.notify, .write],
                                                          value: nil,
                                                          permissions: [.readable, .writeable])
         
-        // Create a service from the characteristic.
         let transferService = CBMutableService(type: TransferService.serviceUUID, primary: true)
-        
-        // Add the characteristic to the service.
         transferService.characteristics = [transferCharacteristic]
-        
-        // And add it to the peripheral manager.
         peripheralManager.add(transferService)
-        
-        // Save the characteristic for later.
         self.transferCharacteristic = transferCharacteristic
-
+    }
+    
+    private func validate() {
+          // nilの場合はtourokuButtonを非活性に
+          guard let textField = self.textField,
+                let textField2 = self.textField2 else {
+                  self.sendButton.isEnabled = false
+                    return
+          }
+          // 文字数が0の場合(""空文字)もtourokuButtonを非活性に
+        let text: String = textField.text  ?? ""
+        let text2: String  = textField2.text ?? ""
+          if text.count == 0 || text2.count == 0 {
+              self.sendButton.isEnabled = false
+              return
+          }
+          // nilでないかつ0文字以上はtourokuButtonを活性に
+          self.sendButton.isEnabled = true
     }
 }
 
@@ -354,18 +369,24 @@ extension PeripheralViewController: CBPeripheralManagerDelegate {
 
     func peripheralManager(_ peripheral: CBPeripheralManager, central: CBCentral, didSubscribeTo characteristic: CBCharacteristic) {
         os_log("Central subscribed to characteristic")
+
         
         // Get the data
-        dataToSend = textView.text.data(using: .utf8)!
+       // dataToSend = textView.text.data(using: .utf8)!
         
         // Reset the index
-        sendDataIndex = 0
+       // sendDataIndex = 0
         
         // save central
         connectedCentral = central
         
         // Start sending
-        sendData()
+        // sendData()
+        let udidData:Data? = udid.data(using: .utf8)
+        transferCharacteristic?.value = udidData
+        peripheralManager.updateValue(udidData!, for: transferCharacteristic!, onSubscribedCentrals: nil)
+        print("Send ",udidData!)
+
     }
     
     /*
@@ -380,15 +401,15 @@ extension PeripheralViewController: CBPeripheralManagerDelegate {
      *  This callback comes in when the PeripheralManager is ready to send the next chunk of data.
      *  This is to ensure that packets will arrive in the order they are sent
      */
-    func peripheralManagerIsReady(toUpdateSubscribers peripheral: CBPeripheralManager) {
+  /*  func peripheralManagerIsReady(toUpdateSubscribers peripheral: CBPeripheralManager) {
         // Start sending again
         sendData()
-    }
+    } */
     
     /*
      * This callback comes in when the PeripheralManager received write to characteristics
      */
-    func peripheralManager(_ peripheral: CBPeripheralManager, didReceiveWrite requests: [CBATTRequest]) {
+ /*   func peripheralManager(_ peripheral: CBPeripheralManager, didReceiveWrite requests: [CBATTRequest]) {
         for aRequest in requests {
             guard let requestValue = aRequest.value,
                 let stringFromData = String(data: requestValue, encoding: .utf8) else {
@@ -398,50 +419,14 @@ extension PeripheralViewController: CBPeripheralManagerDelegate {
             os_log("Received write request of %d bytes: %s", requestValue.count, stringFromData)
             self.textView.text = stringFromData
         }
-    }
+    } */
 }
 
-extension PeripheralViewController: UITextViewDelegate {
-    // implementations of the UITextViewDelegate methods
-
-    /*
-     *  This is called when a change happens, so we know to stop advertising
-     */
-    func textViewDidChange(_ textView: UITextView) {
-        // If we're already advertising, stop
-        if advertisingSwitch.isOn {
-            advertisingSwitch.isOn = false
-            peripheralManager.stopAdvertising()
-        }
-    }
-    
-    /*
-     *  Adds the 'Done' button to the title bar
-     */
-    func textViewDidBeginEditing(_ textView: UITextView) {
-        // We need to add this manually so we have a way to dismiss the keyboard
-        let rightButton = UIBarButtonItem(title: "Done", style: .done, target: self, action: #selector(dismissKeyboard))
-        navigationItem.rightBarButtonItem = rightButton
-    }
-    
-    /*
-     * Finishes the editing
-     */
-    @objc
-    func dismissKeyboard() {
-        textView.resignFirstResponder()
-        navigationItem.rightBarButtonItem = nil
-    }
-}
-    
 extension PeripheralViewController:UITextFieldDelegate {
         func textFieldShouldReturn(_ textField: UITextField) -> Bool {
-            print("returnが押されたよ")
-
-            //キーボードを閉じる
+            print("returnが押されました")
+            validate()
             textField.resignFirstResponder()
-            textField2.resignFirstResponder()
-            //messageに入力されたテキストを変数に入れる。nilの場合はFirestoreへ行く処理をしない
             guard let message = textField.text else {
                 return true
             }
@@ -449,7 +434,6 @@ extension PeripheralViewController:UITextFieldDelegate {
                 return true
             }
 
-            //messageが空欄の場合はFirestoreへ行く処理をしない
             if textField.text == "" {
                 return true
             }
@@ -463,6 +447,7 @@ extension PeripheralViewController:UITextFieldDelegate {
             let second = DateFormatter()
             formatter.setLocalizedDateFormatFromTemplate("H")
             let Chat = formatter.string(from: date)
+            let device: String = udid + "," + Chat
             month.dateFormat = "M"
             day.dateFormat = "d"
             minute.dateFormat = "m"
@@ -473,7 +458,7 @@ extension PeripheralViewController:UITextFieldDelegate {
             let messageData: [String: String] = ["name":name, "message":message, "day": day.string(from: date), "month": month.string(from: date),"minute": String(format: "%04d", realTime), "hour": Chat]
 
             //Firestoreに送信する
-            defaultstore.collection(Chat).addDocument(data: messageData)
+            defaultstore.collection(device).addDocument(data: messageData)
 
             //メッセージの中身を空にする
             textField.text = ""
