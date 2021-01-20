@@ -1,10 +1,3 @@
-//
-//  SceneDelegate.swift
-//  ChatBluetooth
-//
-//  Created by se on 2020/11/06.
-//
-
 import UIKit
 
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
