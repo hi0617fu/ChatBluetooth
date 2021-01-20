@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="17506" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="oHf-1G-L5W">
-    <device id="ipad10_5" orientation="portrait" layout="fullscreen" appearance="light"/>
+    <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17505"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
@@ -13,23 +13,23 @@
             <objects>
                 <viewController storyboardIdentifier="CentralViewController" title="CentralViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="FxQ-Wb-ByH" customClass="CentralViewController" customModule="ChatBluetooth" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="KPN-h6-4Il">
-                        <rect key="frame" x="0.0" y="0.0" width="834" height="1112"/>
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="Jlm-RF-SEh">
-                                <rect key="frame" x="0.0" y="50" width="834" height="1062"/>
+                                <rect key="frame" x="0.0" y="88" width="414" height="774"/>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                 <color key="sectionIndexBackgroundColor" red="1" green="0.74370067839999998" blue="0.11600798079999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <prototypes>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" restorationIdentifier="BlueCell" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="BlueCell" rowHeight="70" id="oKx-fW-Cmw" userLabel="BlueCell" customClass="PeripheralTableViewCell" customModule="ChatBluetooth" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="28" width="834" height="70"/>
+                                        <rect key="frame" x="0.0" y="28" width="414" height="70"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="oKx-fW-Cmw" id="AKW-l2-Fgk">
-                                            <rect key="frame" x="0.0" y="0.0" width="834" height="70"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="414" height="70"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" restorationIdentifier="textlLabel" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="shx-ry-sUq" userLabel="PeripheralLabel">
-                                                    <rect key="frame" x="16" y="25" width="41.5" height="20"/>
+                                                    <rect key="frame" x="20" y="25" width="41.5" height="20"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                     <nil key="textColor"/>
                                                     <nil key="highlightedColor"/>
@@ -65,30 +65,30 @@
                     <navigationItem key="navigationItem" id="hoC-OT-yK9">
                         <barButtonItem key="rightBarButtonItem" systemItem="refresh" id="NPK-WD-YYf">
                             <connections>
-                                <action selector="refreshAction:" destination="FxQ-Wb-ByH" id="HAd-f4-mgz"/>
+                                <action selector="refreshAction:" destination="FxQ-Wb-ByH" id="Sy5-bR-weX"/>
                             </connections>
                         </barButtonItem>
                     </navigationItem>
                     <connections>
                         <outlet property="baseTableView" destination="Jlm-RF-SEh" id="9Z4-AH-9j4"/>
-                        <outlet property="refreshButton" destination="NPK-WD-YYf" id="gaY-qo-BsZ"/>
+                        <outlet property="refreshButton" destination="NPK-WD-YYf" id="WdE-mv-VlV"/>
                         <segue destination="IkY-AI-tl0" kind="show" identifier="CentralChatBox" id="ow5-1a-vLm"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="AOd-43-NnA" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2071.875" y="-361.26760563380282"/>
+            <point key="canvasLocation" x="1362" y="-822"/>
         </scene>
         <!--CentralChatBox-->
         <scene sceneID="32X-81-Ev5">
             <objects>
                 <viewController storyboardIdentifier="CentralChatBox" useStoryboardIdentifierAsRestorationIdentifier="YES" id="IkY-AI-tl0" userLabel="CentralChatBox" customClass="CentralChatBox" customModule="ChatBluetooth" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="tLu-wc-zzP">
-                        <rect key="frame" x="0.0" y="0.0" width="834" height="1112"/>
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
                             <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="W2F-xY-e2V">
-                                <rect key="frame" x="20" y="191" width="794" height="901"/>
+                                <rect key="frame" x="20" y="229" width="374" height="613"/>
                                 <color key="backgroundColor" systemColor="secondarySystemGroupedBackgroundColor"/>
                                 <color key="textColor" systemColor="labelColor"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
@@ -98,33 +98,33 @@
                                 </connections>
                             </textView>
                             <textField opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="249" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="UQH-yZ-oQi">
-                                <rect key="frame" x="20" y="136" width="755" height="34"/>
+                                <rect key="frame" x="20" y="174" width="335" height="34"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <color key="textColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits"/>
                             </textField>
                             <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="LE5-ff-ilL">
-                                <rect key="frame" x="70" y="65" width="744" height="34"/>
+                                <rect key="frame" x="70" y="103" width="324" height="34"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <color key="textColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits"/>
                             </textField>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="名前" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="A9B-9l-y9W">
-                                <rect key="frame" x="20" y="65" width="35" height="34"/>
+                                <rect key="frame" x="20" y="103" width="35" height="34"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="メッセージ" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Fti-Xt-akz">
-                                <rect key="frame" x="20" y="107" width="87" height="21"/>
+                                <rect key="frame" x="20" y="145" width="87" height="21"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="kk7-df-soa">
-                                <rect key="frame" x="783" y="136" width="31" height="34"/>
+                                <rect key="frame" x="363" y="174" width="31" height="34"/>
                                 <color key="backgroundColor" red="1" green="0.94028095580000004" blue="0.27302034549999998" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <state key="normal" title="送信">
                                     <color key="titleColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -170,14 +170,14 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="MEs-hY-ccg" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2940" y="-361.26760563380282"/>
+            <point key="canvasLocation" x="1361" y="-104"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="PwT-bc-UAu">
             <objects>
                 <navigationController id="oHf-1G-L5W" sceneMemberID="viewController">
                     <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="yHT-KW-TaZ">
-                        <rect key="frame" x="0.0" y="0.0" width="834" height="50"/>
+                        <rect key="frame" x="0.0" y="44" width="414" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
                     <connections>
@@ -186,18 +186,18 @@
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="6g7-Cq-QzW" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-417" y="48"/>
+            <point key="canvasLocation" x="1326" y="-2133"/>
         </scene>
         <!--ViewController-->
         <scene sceneID="gbW-MQ-JRY">
             <objects>
                 <viewController title="ViewController" id="RVF-v6-ieB" customClass="CentralSigninViewController" customModule="ChatBluetooth" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="Jsc-bu-VhF">
-                        <rect key="frame" x="0.0" y="0.0" width="834" height="1112"/>
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <button opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="249" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="drS-RX-RkV">
-                                <rect key="frame" x="20" y="137" width="794" height="36"/>
+                                <rect key="frame" x="20" y="175" width="374" height="36"/>
                                 <color key="backgroundColor" systemColor="systemYellowColor"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="20"/>
                                 <state key="normal" title="Central">
@@ -208,7 +208,7 @@
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="u2i-Af-6VT">
-                                <rect key="frame" x="20" y="946" width="794" height="35"/>
+                                <rect key="frame" x="20" y="696" width="374" height="35"/>
                                 <color key="backgroundColor" systemColor="systemYellowColor"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="19"/>
                                 <state key="normal" title="Peripheral">
@@ -240,18 +240,18 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="gns-gA-mjo" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="354.39999999999998" y="47.226386806596707"/>
+            <point key="canvasLocation" x="512" y="-822"/>
         </scene>
         <!--PeripheralView-->
         <scene sceneID="fsE-wo-kSm">
             <objects>
                 <viewController storyboardIdentifier="PeripheralViewController" title="PeripheralViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="nQc-Wn-ETL" userLabel="PeripheralView" customClass="PeripheralViewController" customModule="ChatBluetooth" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="j14-15-SZN">
-                        <rect key="frame" x="0.0" y="0.0" width="834" height="1112"/>
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ke5-XU-IoP">
-                                <rect key="frame" x="773" y="137" width="49" height="34"/>
+                                <rect key="frame" x="353" y="175" width="49" height="34"/>
                                 <color key="backgroundColor" red="1" green="0.94028095577236204" blue="0.27302034549220844" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <color key="tintColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <state key="normal" title="送信">
@@ -262,20 +262,20 @@
                                 </connections>
                             </button>
                             <textField opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="249" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="ENd-MA-Cjx" userLabel="textField2">
-                                <rect key="frame" x="12" y="137" width="745" height="34"/>
+                                <rect key="frame" x="12" y="175" width="325" height="34"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <color key="textColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits"/>
                             </textField>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="advertise" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="HqW-l0-8Oj">
-                                <rect key="frame" x="12" y="193" width="71" height="21"/>
+                                <rect key="frame" x="12" y="231" width="71" height="21"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="Jdc-yM-gyI">
-                                <rect key="frame" x="773" y="183" width="51" height="31"/>
+                                <rect key="frame" x="353" y="221" width="51" height="31"/>
                                 <color key="onTintColor" red="1" green="0.94028095580000004" blue="0.27302034549999998" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <color key="thumbTintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <connections>
@@ -283,7 +283,7 @@
                                 </connections>
                             </switch>
                             <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="fYF-o8-oYt">
-                                <rect key="frame" x="12" y="222" width="810" height="870"/>
+                                <rect key="frame" x="12" y="260" width="390" height="616"/>
                                 <color key="backgroundColor" systemColor="systemGray6Color"/>
                                 <color key="textColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
@@ -293,20 +293,20 @@
                                 </connections>
                             </textView>
                             <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="KNa-Pf-kmw" userLabel="textField">
-                                <rect key="frame" x="55" y="66" width="767" height="34"/>
+                                <rect key="frame" x="55" y="104" width="347" height="34"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <color key="textColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits"/>
                             </textField>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="名前" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="gF6-AE-V2W">
-                                <rect key="frame" x="12" y="66" width="35" height="34"/>
+                                <rect key="frame" x="12" y="104" width="35" height="34"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="メッセージ" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="PZh-05-W21">
-                                <rect key="frame" x="12" y="108" width="87" height="21"/>
+                                <rect key="frame" x="12" y="146" width="87" height="21"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
@@ -346,14 +346,14 @@
                     <connections>
                         <outlet property="advertisingSwitch" destination="Jdc-yM-gyI" id="TfR-uS-2bp"/>
                         <outlet property="sendButton" destination="ke5-XU-IoP" id="vRx-3C-de0"/>
-                        <outlet property="textField" destination="KNa-Pf-kmw" id="wrO-VB-PCr"/>
-                        <outlet property="textField2" destination="ENd-MA-Cjx" id="xtR-QL-16d"/>
+                        <outlet property="textField" destination="ENd-MA-Cjx" id="wj8-tW-jnN"/>
+                        <outlet property="textField2" destination="KNa-Pf-kmw" id="iw4-wF-P9d"/>
                         <outlet property="textView" destination="fYF-o8-oYt" id="ZOI-dm-n97"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="81f-qp-8UO" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2235" y="385"/>
+            <point key="canvasLocation" x="512" y="-104"/>
         </scene>
     </scenes>
     <resources>

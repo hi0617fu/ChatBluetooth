@@ -1,9 +1,3 @@
-//
-//  CentralViewController.swift
-//  ChatBluetooth
-//
-//  Created by se on 2020/11/09.
-//
 import Foundation
 import UIKit
 import CoreBluetooth
@@ -16,64 +10,57 @@ class CentralViewController: UIViewController {
     @IBOutlet weak var baseTableView: UITableView!
     @IBOutlet weak var refreshButton: UIBarButtonItem!
 
-    var peripherals: [CBPeripheral?] = []
-    var characteristicValue = [CBUUID: NSData]()
-    var characteristics = [String : CBCharacteristic]()
-    var centralManager: CBCentralManager!
-    var peripheralManager: CBPeripheralManager?
-    var transferCharacteristic: CBCharacteristic?
-    var writeIterationsComplete = 0
-    var connectionIterationsComplete = 0
-
-    var discoveredPeripheral:  CBPeripheral?
-     
+    var centralManager: CBCentralManager! //Core Bluetoothを始動させるための変数
+    var discoveredPeripheral:  CBPeripheral! //connectするPeripheralを格納する変数
+    var start: Date! //Scanから検知までの時間を計測する変数
+    var start2: Date! //Tapから接続、キャラクタリスティクス読み込みまでの時間を計測する変数
+    var timer: Timer = Timer() //Scanの時間を決めるための変数
+    var myUuids: NSMutableArray = NSMutableArray() //見つけたPeripheralのUUIDを格納するArray(配列)
+    var myPeripheral: NSMutableArray = NSMutableArray() //見つけたPeripheralのCBPeripheralを格納する配列
+    
      override func viewDidLoad() {
-         centralManager = CBCentralManager(delegate: self, queue: nil, options: [CBCentralManagerOptionShowPowerAlertKey: true])
+        // 画面に遷移した最初に行うこと.配列の初期化、tableViewの初期化、ボタンの配置、Scanの開始
+        myUuids = NSMutableArray()
+        myPeripheral = NSMutableArray()
         self.baseTableView.delegate = self
         self.baseTableView.dataSource = self
-       // self.baseTableView.register(PeripheralTableViewCell.self, forCellReuseIdentifier: "BlueCell")
         self.view.addSubview(baseTableView)
-        self.baseTableView.reloadData()
         let backButton = UIBarButtonItem(title: "Disconnect", style: .plain, target: nil, action: nil)
         navigationItem.backBarButtonItem = backButton
         self.retrievePeripheral()
      }
      
-     override func viewWillDisappear(_ animated: Bool) {
-         // Don't keep it going while we're not showing.
-         centralManager.stopScan()
-         os_log("Scanning stopped")
-       //  data.removeAll(keepingCapacity: false)
-         super.viewWillDisappear(animated)
+    override func viewWillDisappear(_ animated: Bool) {
+        // 別の画面に映る瞬間に行うこと、保持していたPeripheralの情報を削除してtableviewから見れなくする.
+        discoveredPeripheral = nil
+        myUuids = []
+        myPeripheral = []
+        baseTableView.reloadData()
+        super.viewWillDisappear(animated)
      }
 
      private func retrievePeripheral() {
-        self.discoveredPeripheral = nil
-         let connectedPeripherals: [CBPeripheral] = (centralManager.retrieveConnectedPeripherals(withServices: [TransferService.serviceUUID]))
-        self.baseTableView.reloadData()
-         
-         os_log("Found connected Peripherals with transfer service: %@", connectedPeripherals)
-         
-         if let connectedPeripheral = connectedPeripherals.last {
-             os_log("Connecting to peripheral %@", connectedPeripheral)
-            self.discoveredPeripheral = connectedPeripheral
-             centralManager.connect(connectedPeripheral, options: nil)
-         } else {
-             // We were not connected to our counterpart, so start scanning
-             centralManager.scanForPeripherals(withServices: [TransferService.serviceUUID],
-                                                options: [CBCentralManagerScanOptionAllowDuplicatesKey: true])
-         }
+        //Scan関数. timerを5秒に設定し、centralManagerを始動（①に移動）.5秒経ったらstopscan関数を実行
+        print("retrieve")
+        timer = Timer.scheduledTimer(timeInterval: 5.0,target: self, selector: #selector(self.stopscan), userInfo: nil, repeats: false)
+        start = Date()
+        centralManager = CBCentralManager(delegate: self, queue: nil, options: [CBCentralManagerOptionShowPowerAlertKey: true])
+     }
+    
+     @objc func stopscan() {
+        //centralManagerのScanを止める
+         print("5seconds stop Scan")
+         centralManager.stopScan()
      }
      
      private func cleanup() {
-         // Don't do anything if we're not connected
+        //.connected状態のPeripheralが存在すればそのPeripheralのservice,characteristicsを削除
          guard let discoveredPeripheral = discoveredPeripheral,
              case .connected = discoveredPeripheral.state else { return }
          
          for service in (discoveredPeripheral.services ?? [] as [CBService]) {
              for characteristic in (service.characteristics ?? [] as [CBCharacteristic]) {
                  if characteristic.uuid == TransferService.characteristic_UUID && characteristic.isNotifying {
-                     // It is notifying, so unsubscribe
                     self.discoveredPeripheral?.setNotifyValue(false, for: characteristic)
                     print("cleanup")
                  }
@@ -83,29 +70,22 @@ class CentralViewController: UIViewController {
      }
     
     @IBAction func refreshAction(_ sender: AnyObject) {
-        print("refresh")
-  //      discoveredPeripheral = nil
-        peripherals = []
+        //一旦保持しているPeripheralの情報を削除してtableviewを更新してからScan再開
+        discoveredPeripheral = nil
+        myUuids = []
+        myPeripheral = []
         self.baseTableView.reloadData()
-        print("refresh2")
-        centralManager = CBCentralManager(delegate: self, queue: nil, options: [CBCentralManagerOptionShowPowerAlertKey: true])
-        print("refresh3")
-        self.baseTableView.reloadData()
-        print("refresh4")
-        /*
-        self.baseTableView.reloadData()
-        retrievePeripheral()
-        print("test",peripherals)*/
+        self.retrievePeripheral()
     }
  }
 
  extension CentralViewController: CBCentralManagerDelegate {
      internal func centralManagerDidUpdateState(_ central: CBCentralManager) {
-
+        //① 端末のBluetoothがONになっていればPeripheral端末の検知がstart.検知したら②に移動
          switch central.state {
          case .poweredOn:
              os_log("CBManager is powered on")
-             retrievePeripheral()
+             centralManager.scanForPeripherals(withServices: [TransferService.serviceUUID], options: [CBCentralManagerScanOptionAllowDuplicatesKey: true])
          case .poweredOff:
              os_log("CBManager is not powered on")
              return
@@ -128,73 +108,54 @@ class CentralViewController: UIViewController {
 
      func centralManager(_ central: CBCentralManager, didDiscover peripheral: CBPeripheral,
                          advertisementData: [String: Any], rssi RSSI: NSNumber) {
-        
-        /*self.discoveredPeripheral = peripheral
-        self.peripherals.append(peripheral)
-        peripheral.delegate = self
-        self.baseTableView.reloadData() */
-         
-         guard RSSI.intValue >= -50
+        //②見つけたPeripheralのCBPeripheral,identifierをそれぞれmyPeripheral,myUuidsに格納.ただし、同じ名前のものは再び入らないようにする.格納されたら③に移動
+         guard RSSI.intValue >= -100
              else {
                  os_log("Discovered perhiperal not in expected range, at %d", RSSI.intValue)
                  return
          }
-         
-        os_log("Discovered %s at %d", String(describing: discoveredPeripheral?.name), RSSI.intValue)
-         
-         if discoveredPeripheral != peripheral {
-             discoveredPeripheral = peripheral
-             os_log("Connecting to perhiperal %@", peripheral)
-            self.peripherals.append(peripheral)
-             centralManager.connect(peripheral, options: nil)
-         }
+        if (myUuids.contains(peripheral.identifier.uuidString) || myPeripheral.contains(peripheral)){
+            // スルー
+        } else {
+             os_log("Discovered %s at %d", String(describing: peripheral.name), RSSI.intValue)
+            myPeripheral.add(peripheral)
+            myUuids.add(peripheral.identifier.uuidString)
+            //か、ここ
+        }
+            self.baseTableView.reloadData()
+            let elapsed = Date().timeIntervalSince(start)
+            print(elapsed)
      }
 
-
      func centralManager(_ central: CBCentralManager, didFailToConnect peripheral: CBPeripheral, error: Error?) {
+        //centralManager.connectが失敗したらここに来る.本来使わないゾーン
          os_log("Failed to connect to %@. %s", peripheral, String(describing: error))
          cleanup()
      }
      
      func centralManager(_ central: CBCentralManager, didConnect peripheral: CBPeripheral) {
-         os_log("Peripheral Connected")
-       // let udidData = transferCharacteristic
-       // let udidString = String(data:udidData, encoding: .utf8)
-       // print(udidString!)
-         centralManager.stopScan()
          os_log("Scanning stopped")
-        
-         
-         // set iteration info
-         connectionIterationsComplete += 1
-         writeIterationsComplete = 0
-
+        //⑤接続したperipheralのserviceを探索serviceを見つけたら⑥に移動
          peripheral.delegate = self
          peripheral.discoverServices([TransferService.serviceUUID])
-        
-         /*   let storyboard = UIStoryboard(name: "Main", bundle: nil)
-        let centralChatBox = storyboard.instantiateViewController(withIdentifier: "CentralChatBox") as! CentralChatBox
-        
-        navigationController?.pushViewController(centralChatBox, animated: true) */
      }
      
      func centralManager(_ central: CBCentralManager, didDisconnectPeripheral peripheral: CBPeripheral, error: Error?) {
+        //Peripheralとの接続を削除
          os_log("Perhiperal Disconnected")
          discoveredPeripheral = nil
      }
  }
 
- extension CentralViewController: CBPeripheralDelegate {
+extension CentralViewController: CBPeripheralDelegate {
      func peripheral(_ peripheral: CBPeripheral, didDiscoverServices error: Error?) {
          if let error = error {
              os_log("Error discovering services: %s", error.localizedDescription)
              cleanup()
              return
          }
-         guard let peripheralServices = peripheral.services else { return }
-         for service in peripheralServices {
-             peripheral.discoverCharacteristics([TransferService.characteristic_UUID], for: service)
-         }
+        //⑥service内のcharacteristicsを探索.見つけたら⑦に移動
+        peripheral.discoverCharacteristics([TransferService.characteristic_UUID], for: (peripheral.services?.first)!)
      }
      
      func peripheral(_ peripheral: CBPeripheral, didDiscoverCharacteristicsFor service: CBService, error: Error?) {
@@ -203,11 +164,8 @@ class CentralViewController: UIViewController {
              cleanup()
              return
          }
-        guard let serviceCharacteristics = service.characteristics else { return }
-         for characteristic in serviceCharacteristics where characteristic.uuid == TransferService.characteristic_UUID {
-             transferCharacteristic = characteristic
-             peripheral.setNotifyValue(true, for: characteristic)
-         }
+        //⑦見つけたcharacteristicsを通知する.通知がきたら⑧に移動
+        peripheral.setNotifyValue(true, for: (service.characteristics?.first)!)
      }
      
      func peripheral(_ peripheral: CBPeripheral, didUpdateValueFor characteristic: CBCharacteristic, error: Error?) {
@@ -216,66 +174,45 @@ class CentralViewController: UIViewController {
              cleanup()
              return
          }
+        //⑧受け取ったcharacteristicをstring型に直してチャットボックスに遷移
          guard let characteristicData = characteristic.value,
-            let stringFromData = String(data: characteristicData, encoding: .utf8) else { return }
-        
+               let stringFromData = String(data: characteristicData, encoding: .utf8) else { return }
          os_log("Received %d bytes: %s", characteristicData.count, stringFromData)
-         print(stringFromData)
          string =  stringFromData
-        if discoveredPeripheral != peripheral {
-            discoveredPeripheral = peripheral
-            os_log("Connecting to perhiperal %@", peripheral)
-       /*   self.peripherals.append(peripheral)
-           centralManager.connect(peripheral, options: nil)*/
-        }
-   
-        self.baseTableView.reloadData()
-        // performSegue(withIdentifier: "CentralChatBox", sender: nil)
+
+         let elapsed2 = Date().timeIntervalSince(start2)
+         print("end," ,elapsed2)
+         performSegue(withIdentifier: "CentralChatBox", sender: nil)
      }
-    /* override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-         if segue.identifier == "CentralChatBox" {
-            let nextView = segue.destination as! CentralChatBox
-            nextView.udidData = string
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        //チャットボックスに遷移する際に、受け取ったcharacteristicをCentralChatBox内でも使えるように準備
+        if (segue.identifier == "CentralChatBox") {
+            let vc2: CentralChatBox = (segue.destination as? CentralChatBox)!
+            vc2.udidData = string
         }
-    }*/
+    }
  }
 
 extension CentralViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return self.peripherals.count
+        //③格納されたmyUuidsの数をそのままcellの個数に反映させる
+        return myUuids.count
     }
-    
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        //Connect to device where the peripheral is connected
+        //③格納されたmyUuidsをtableViewに表示.ユーザがそれをタップしたら④に移動
         let cell = tableView.dequeueReusableCell(withIdentifier: "BlueCell") as! PeripheralTableViewCell
-        let peripheral = self.peripherals[indexPath.row]
-        
-        if peripheral?.name == nil {
-            print("nill")
-            cell.peripheralLabel?.text = nil
-        } else {
-            let string = peripheral?.identifier
-            print("peripheralLabel")
-            cell.peripheralLabel?.text = string?.uuidString
-        }
-    //    discoveredPeripheral = nil
+        cell.peripheralLabel!.text = "\(myUuids[indexPath.row])"
         return cell
     }
-    
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        discoveredPeripheral = peripherals[indexPath.row]
+        //④centralManagerのScanを止めて選択したPeripheralと接続.接続されたら⑤に移動
+        self.discoveredPeripheral = myPeripheral[indexPath.row] as? CBPeripheral
+        centralManager.stopScan()
+        start2 = Date()
+        centralManager.connect(self.discoveredPeripheral, options: nil)
+        print("connect")
         tableView.deselectRow(at: indexPath, animated: true)
-        // 別の画面に遷移
-       performSegue(withIdentifier: "CentralChatBox", sender: nil)
     }
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        if (segue.identifier == "CentralChatBox") {
-            let vc2: CentralChatBox = (segue.destination as? CentralChatBox)!
-            // ViewControllerのtextVC2にメッセージを設定
-            vc2.udidData = string
-        }
-    }
-
 }
 
  

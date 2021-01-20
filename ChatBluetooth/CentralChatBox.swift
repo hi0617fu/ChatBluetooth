@@ -19,7 +19,7 @@ class CentralChatBox: UIViewController {
      var defaultstore: Firestore!
      var date = Date()
      var formatter = DateFormatter()
-    var udidData = ""
+     var udidData = ""
      
      override func viewDidLoad() {
          super.viewDidLoad()

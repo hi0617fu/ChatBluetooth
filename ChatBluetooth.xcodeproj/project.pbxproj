@@ -16,7 +16,6 @@
 		9240493225553B530034DD1A /* CentralChatBox.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9240493125553B530034DD1A /* CentralChatBox.swift */; };
 		9240493525553B690034DD1A /* TransferService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9240493425553B690034DD1A /* TransferService.swift */; };
 		924A9C13255A521F00C8AC85 /* CentralSigninViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 924A9C12255A521F00C8AC85 /* CentralSigninViewController.swift */; };
-		924A9C19255A524200C8AC85 /* PeripheralSigninViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 924A9C18255A524200C8AC85 /* PeripheralSigninViewController.swift */; };
 		92D333932557DDF30045DE28 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 92D333922557DDF30045DE28 /* GoogleService-Info.plist */; };
 		92D33397255942D90045DE28 /* CentralViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92D33396255942D90045DE28 /* CentralViewController.swift */; };
 		92D3339B255942FF0045DE28 /* PeripheralTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92D3339A255942FF0045DE28 /* PeripheralTableViewController.swift */; };
@@ -38,7 +37,6 @@
 		9240493125553B530034DD1A /* CentralChatBox.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CentralChatBox.swift; sourceTree = "<group>"; };
 		9240493425553B690034DD1A /* TransferService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransferService.swift; sourceTree = "<group>"; };
 		924A9C12255A521F00C8AC85 /* CentralSigninViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CentralSigninViewController.swift; sourceTree = "<group>"; };
-		924A9C18255A524200C8AC85 /* PeripheralSigninViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PeripheralSigninViewController.swift; sourceTree = "<group>"; };
 		92D333922557DDF30045DE28 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "GoogleService-Info.plist"; path = "../../../Downloads/GoogleService-Info.plist"; sourceTree = "<group>"; };
 		92D33396255942D90045DE28 /* CentralViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CentralViewController.swift; sourceTree = "<group>"; };
 		92D3339A255942FF0045DE28 /* PeripheralTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PeripheralTableViewController.swift; sourceTree = "<group>"; };
@@ -97,7 +95,6 @@
 				924048E2255533340034DD1A /* AppDelegate.swift */,
 				924048E4255533340034DD1A /* SceneDelegate.swift */,
 				9240493425553B690034DD1A /* TransferService.swift */,
-				924A9C18255A524200C8AC85 /* PeripheralSigninViewController.swift */,
 				9240492E25553B440034DD1A /* PeripheralChatBox.swift */,
 				92D3339A255942FF0045DE28 /* PeripheralTableViewController.swift */,
 				924A9C12255A521F00C8AC85 /* CentralSigninViewController.swift */,
@@ -249,7 +246,6 @@
 				9240493225553B530034DD1A /* CentralChatBox.swift in Sources */,
 				9240492F25553B450034DD1A /* PeripheralChatBox.swift in Sources */,
 				9240493525553B690034DD1A /* TransferService.swift in Sources */,
-				924A9C19255A524200C8AC85 /* PeripheralSigninViewController.swift in Sources */,
 				924A9C13255A521F00C8AC85 /* CentralSigninViewController.swift in Sources */,
 				92D3339B255942FF0045DE28 /* PeripheralTableViewController.swift in Sources */,
 				92D33397255942D90045DE28 /* CentralViewController.swift in Sources */,
